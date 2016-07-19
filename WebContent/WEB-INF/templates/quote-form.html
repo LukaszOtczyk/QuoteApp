@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="fragments/fragment_header :: headerFragment">
+	</head>
+	<body>
+		<div class="container">
+			<form action="#" th:action="@{/quote}" th:object=${quote} method="post"
+			class="form-horizontal">
+				<label>Author name</label>
+				<input type="text" class="form-control" th:field="*{author}"/>
+				<br>
+				<label>Quote</label>
+				<input type="text" class="form-control" th:field="*{content}"/>
+				<br>
+				<button type="submit" class="btn btn-primary" name="save">Add quote!</button>
+			</form>
+			<!--  <p th:text=${q1.author}></p>	-->
+		</div>
+	</body>
+</html>

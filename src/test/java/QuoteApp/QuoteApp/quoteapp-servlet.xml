@@ -1,0 +1,81 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+ 
+	<mvc:annotation-driven/>
+	<context:component-scan base-package="com.quoteapp" />
+ 
+ <!--
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+--> 
+<!-- 	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="cache" value="false" />
+		<property name="viewClass" value="org.springframework.faces.mvc.JsfView" />
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".xhtml" />
+	</bean>
+-->
+	
+	<bean id="templateResolver"
+		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
+	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+	</bean>
+
+	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	    <property name="url" value="jdbc:mysql://localhost:3306/quotesapp?serverTimezone=UTC"/>
+	    <property name="username" value="root"/>
+	    <property name="password" value="123"/>
+	</bean>
+	
+	
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" >
+       <property name="dataSource" ref="dataSource"/>
+       <property name="packagesToScan">
+           <list>
+               <value>com.quoteapp.model</value>
+           </list>
+       </property>
+       <property name="hibernateProperties">
+           <props>
+               <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+               <prop key="hibernate.show_sql">false</prop>
+               <prop key="hibernate.format_sql">false</prop>
+               <prop key="hibernate.hbm2ddl.auto">update</prop>
+           </props>
+       </property>       
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="transactionManager"  class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+</beans>
