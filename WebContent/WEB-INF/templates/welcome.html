@@ -3,8 +3,21 @@
 	<head th:include="fragments/fragment_header :: headerFragment">
 	</head>
 	<body>
+		<nav th:replace="fragments/fragment_navigation :: navigationFragment"></nav>
 		<div class="container">
-			<p th:utext="${message}"></p>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+				<div th:if="${quote}">
+					<h1 th:text=${quote.content}></h1>
+					<div class="span12 text-right">
+						<p><span class="label label-default" th:utext="${quote.author}"></span></p>
+					</div>
+				</div>
+				<div th:unless="${quote}">
+					<h1>Sorry, our quotes base is empty!</h1>
+				</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

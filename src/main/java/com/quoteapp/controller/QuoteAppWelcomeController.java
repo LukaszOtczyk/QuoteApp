@@ -29,15 +29,15 @@ public class QuoteAppWelcomeController {
 	private QuoteService quoteService;
 
 	@RequestMapping("/welcome")
-	public ModelAndView helloWorld() {
-		System.out.println(System.getProperty("java.class.path"));
-		String message = "Hello World!";
-		//quoteService.saveQuote(new Quote("Adam Luther", "Power to the peaciful"));
+	public ModelAndView showWelcome() {
 		Quote quote = retrieveLastQuoteFromDB();
-		if(quote != null ) {
-			message += " <br>Quote: \"" + quote.getContent() + "\"";
-		}
-		return new ModelAndView("welcome", "message", message);
+		return new ModelAndView("welcome", "quote", quote);
+	}
+
+	@RequestMapping("/welcome-random")
+	public ModelAndView showRandomQuote() {
+		Quote quote = retrieveRandomQuoteFromDB();
+		return new ModelAndView("welcome", "quote", quote);
 	}
 	
 	@RequestMapping(value="/quote", method=RequestMethod.GET)
@@ -67,17 +67,21 @@ public class QuoteAppWelcomeController {
 	@RequestMapping(value="/get-random-quote")
 	@ResponseBody
 	public Quote getRandomQuote() {
-		List<Quote> quotes = quoteService.findAllQuotes();
-		if(!quotes.isEmpty()) {
-			return quotes.get(new Random().nextInt(quotes.size()));
-		}
-		return null;
+		return retrieveRandomQuoteFromDB();
 	}
 	
 	private Quote retrieveLastQuoteFromDB() {
 		List<Quote> quotes = quoteService.findAllQuotes();
 		if(quotes != null && !quotes.isEmpty()) {
 			return quotes.get(quotes.size()-1);
+		}
+		return null;
+	}
+
+	private Quote retrieveRandomQuoteFromDB() {
+		List<Quote> quotes = quoteService.findAllQuotes();
+		if(!quotes.isEmpty()) {
+			return quotes.get(new Random().nextInt(quotes.size()));
 		}
 		return null;
 	}
