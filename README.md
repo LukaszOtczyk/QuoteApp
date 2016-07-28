@@ -21,9 +21,7 @@ QuoteApp is simple web app created in order to present some great features of Sp
 
 Clone project and build it with maven:
 
-```
-#!bash
-
+```bash
 mvn clean install
 ```
 Then run it on Tomcat server (tested with Tomcat 7).
