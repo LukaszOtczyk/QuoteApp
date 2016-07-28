@@ -14,6 +14,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.quoteapp.model.Quote;
+import com.quoteapp.service.QuoteService;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,11 +29,17 @@ public class QuoteAppControllerTest {
 	@Autowired
 	WebApplicationContext wac;
 	
+	@Autowired
+	private QuoteService quoteService;
+
 	private MockMvc mockMvc;
 	
 	@Before
+	@Transactional
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		//Assuring that there is at least one quote ins DB while running tests.
+		quoteService.saveQuote(new Quote("Test author", "Test content"));
 	}
 	
 	@Test
